@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<!-- CSP support mode (required for Windows Universal apps): https://docs.angularjs.org/api/ng/directive/ngCsp -->
+<html lang="en" ng-app="app" ng-csp>
+<head>
+    <meta charset="utf-8" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <!-- JS dependencies (order matters!) -->
+    <script src="http://maps.google.com/maps/api/js?key=AIzaSyB0jqzEEj9RuX67TRRL1zxvcVh7pCZVd0E&amp;sensor=true"/>
+    <script src="scripts/platformOverrides.js"></script>
+    <script src="lib/angular/angular.js"></script>
+    <script src="lib/onsen/js/onsenui.js"></script>
+    <script src="index.js"></script>
+
+    <!-- CSS dependencies -->
+    <link rel="stylesheet" href="lib/onsen/css/onsenui.css" />
+    <link rel="stylesheet" href="lib/onsen/css/onsen-css-components-blue-basic-theme.css" />
+    <link rel="stylesheet" href="index.css"/>
+
+    <!-- CSP support mode (required for Windows Universal apps) -->
+    <link rel="stylesheet" href="lib/angular/angular-csp.css" />
+
+
+    <title>Test app</title>
+</head>
+
+<body ng-controller="AppController">
+    <!-- Cordova reference -->
+    <script src="lib/ngCordova/dist/ng-cordova.min.js"/>
+    <script src="cordova.js"></script>
+    <script src="scripts/index.js"></script>
+    <!-- -->
+
+    <ons-tabbar var="myTabbar">
+        <ons-tab active="true" page="home.html">
+            <div class="tab">
+                <ons-icon icon="ion-person" class="tab-icon"></ons-icon>
+                <div class="tab-label">Users</div>
+            </div>
+        </ons-tab>
+
+        <ons-tab page="settings.html">
+            <div class="tab">
+                <ons-icon icon="ion-android-map" class="tab-icon"></ons-icon>
+                <div class="tab-label">map</div>
+            </div>
+        </ons-tab>
+    </ons-tabbar>
+
+
+    <ons-template id="home.html">
+        <ons-navigator>
+            <ons-page>
+                <ons-toolbar>
+                    <div class="left"></div>
+                    <div class="center">Users</div>
+                    <div class="right"><ons-toolbar-button ng-click="add()"><ons-icon icon="ion-person-add" size="15px" ></ons-icon></ons-toolbar-button></div>
+                </ons-toolbar>
+
+                <ons-list style="margin: -1px 0">
+                    <ons-list-item modifier="chevron" class="item" ng-repeat="user in users"  ng-click="doSomething(user.id)">
+                        <ons-row>
+                            <ons-col width="60px">
+                                <img class="item-thum" ng-src="img/person.png">
+                            </ons-col>
+                            <ons-col>
+                                <header>
+                                    <span class="item-title">{{user.first_name}} {{user.last_name}}</span>
+                                </header>
+                                <p class="item-desc">{{user.email}}</p>
+                            </ons-col>
+                        </ons-row>
+                    </ons-list-item>
+                </ons-list>
+            </ons-page>
+        </ons-navigator>
+    </ons-template>
+
+    <ons-template id="settings.html">
+        <ons-page ng-controller="mapController">
+            <ons-toolbar>
+                <div class="center">Map</div>
+            </ons-toolbar>
+            <div style="padding: 15px">
+                <ons-button ng-click="getlocation()" modifier="large">
+                    get location
+                </ons-button>
+                <label>lat: {{loc.lat}}</label>
+                <label>long: {{loc.long}}</label>
+            </div>        </ons-page>
+    </ons-template>
+
+    <ons-template id="test.html">
+        <ons-page>
+            <ons-toolbar>
+                <div class="left"><ons-toolbar-button ng-click="goback()"><ons-icon icon="ion-chevron-left" size="15px" > Back</ons-icon></ons-toolbar-button></div>
+                <div class="center">User</div>
+            </ons-toolbar>
+            <ons-list>
+                <ons-list-item>
+                    <input type="text" placeholder="First Name" value="{{user.first_name}}" ng-model="user.first_name" class="text-input text-input--transparent inputWidth">
+                </ons-list-item>
+                <ons-list-item>
+                    <input type="text" placeholder="last name" value="{{user.last_name}}" ng-model="user.last_name" class="text-input text-input--transparent inputWidth">
+                </ons-list-item>
+                <ons-list-item>
+                    <input type="text" placeholder="Email" value="{{user.email}}" ng-model="user.email" class="text-input text-input--transparent inputWidth">
+                </ons-list-item>
+                <ons-list-item>
+                    <input type="text" placeholder="Gender" value="{{user.gender}}" ng-model="user.gender" class="text-input text-input--transparent inputWidth">
+                </ons-list-item>
+                <ons-list-item>
+                    <input type="text" placeholder="ip address" value="{{user.ip_address}}" ng-model="user.ip_address" class="text-input text-input--transparent inputWidth">
+                </ons-list-item>
+            </ons-list>
+            <ons-button modifier="large" ng-click="update()">Update user</ons-button>
+            <ons-button class="buttonWaring" modifier="large" ng-click="remove()">remove user</ons-button>
+        </ons-page>
+    </ons-template>
+
+    <ons-template id="add.html">
+        <ons-page>
+            <ons-toolbar>
+                <div class="left"><ons-toolbar-button ng-click="goback()"><ons-icon icon="ion-close-round" size="15px" ></ons-icon></ons-toolbar-button></div>
+                <div class="center">add</div>
+                <div class="right"><ons-toolbar-button ng-click="save()"><ons-icon icon="ion-checkmark-round" size="15px" ></ons-icon></ons-toolbar-button></div>
+            </ons-toolbar>
+            <ons-list>
+                <ons-list-item>
+                    <input type="text" placeholder="First Name" ng-model="user.first_name" class="text-input text-input--transparent inputWidth">
+                </ons-list-item>
+                <ons-list-item>
+                    <input type="text" placeholder="last name"  ng-model="user.last_name" class="text-input text-input--transparent inputWidth">
+                </ons-list-item>
+                <ons-list-item>
+                    <input type="text" placeholder="Email" ng-model="user.email" class="text-input text-input--transparent inputWidth">
+                </ons-list-item>
+                <ons-list-item>
+                    <input type="text" placeholder="Gender" ng-model="user.gender" class="text-input text-input--transparent inputWidth">
+                </ons-list-item>
+                <ons-list-item>
+                    <input type="text" placeholder="ip address"  ng-model="user.ip_address" class="text-input text-input--transparent inputWidth">
+                </ons-list-item>
+            </ons-list>
+        </ons-page>
+    </ons-template>
+
+
+</body>
+</html>
